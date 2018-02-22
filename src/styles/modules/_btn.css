@@ -1,0 +1,20 @@
+.btn {
+    color: #fff;
+    background: transparent;
+    border: 1px solid $mainWhite;
+    width: 100px;
+    height: 45px;
+    margin: 0;
+
+    &:hover {
+        background: rgba(255,255,255,.05);
+    }
+
+    &--small {
+        width: 50px;
+    }
+
+    &--large {
+        width: 300px;
+    }
+}
