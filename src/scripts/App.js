@@ -14,32 +14,28 @@ window.onload = () => {
     view.onKeyDown = (event) => {
         // check for valid keypress input
         if (calculator.validateInput(event.key)) {
-
             // stop defaul character press beahvior to prevent weirdness
             event.preventDefault();
-            // pass value to calc
-            calculator.handleInput(event.key);
-            // draw random circles based on key value
-            addFun(event.key);
+            passInputValues(event.key, KeyData);
         }
     };
 
     document.getElementById('calc-btns').addEventListener('click', (event) => {
         // check for valid click input
         if (event.target.value) {
-            // pass value to calc
-            calculator.handleInput(event.target.value);
-            // draw random circles based on button value
-            addFun(event.target.value);
+            // stop defaul character press beahvior to prevent weirdness
+            event.preventDefault();
+            passInputValues(event.target.value, KeyData);
         }
     });
 
-    const addFun = (value) => {
-        // establish a random point to draw circle on keypress
-        const point = circles.randomPoint();
-        // draw circle at generated point with color based on key value in KeyData object
-        circles.drawCircle(point, KeyData[value].color);
-        // call function to animate circles once drawn
-        circles.animateCircles();
+    const passInputValues = (value, keyData) => {
+        // pass value to calc
+        calculator.handleInput(value);
+        // draw random circles based on key value and corresponding keydata color
+        //  if the user submitted the equation animate the answer
+        const circlesToDraw = (value === '=' || value === 'enter') ? calculator.answer : value;
+        circles.create(circlesToDraw, keyData);
     };
+
 }

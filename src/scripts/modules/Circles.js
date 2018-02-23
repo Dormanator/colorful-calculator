@@ -47,6 +47,69 @@ class Circles {
             }
         }
     }
+
+    drawMultipleCircles(color, times) {
+        for (let i = 0; i < times; i++) {
+            // establish a random point to draw circle on keypress
+            const point = this.randomPoint();
+            // draw circle at generated point with color based on key value in KeyData object
+            this.drawCircle(point, color);
+        }
+    }
+
+    create(value, keydata) {
+
+        const VALID_INPUT = this.validateInput(value);
+
+        // // if the value passed in is a number
+        // if (/\d/.test(value)) {
+        //     // round it so we can use it properly
+        //     value = Math.round(value);
+        //     // establish how many circles we should draw based on the value entered, if the number is larger than 500 than only do 500
+        //     numOfCircles = value > MAX_CIRCLES ? MAX_CIRCLES : value;
+        //     // if the answer we recieved is larger than 9 or less than 1
+        //     // select a random number to get a color from our keydata
+        //     keyValue = value > HIGHEST_KEY_VALUE || value < 1 ? RANDOM_COLOR_SELECTION : value
+        // } else {
+        //     // if its not a number keep it as teh key value and only iterate one circle creation
+        //     keyValue = value;
+        //     numOfCircles = 1;
+        // }
+
+        // call to draw many circles based on the color and number passed in
+        this.drawMultipleCircles(keydata[VALID_INPUT.keyValue].color, VALID_INPUT.numOfCircles);
+
+        // call function to animate circles once drawn
+        this.animateCircles();
+    }
+
+    validateInput(value) {
+        // establish vairbles we will asign based on input
+        let numOfCircles = 0,
+            keyValue = 0;
+        // establish legend for numbers used
+        const MAX_CIRCLES = 500,
+            HIGHEST_KEY_VALUE = 9,
+            LOWEST_KEY_VALUE = 1,
+            RANDOM_COLOR_SELECTION = Math.floor(Math.random() * 9),
+            VALID_INPUT = {};
+
+        if (/\d/.test(value)) {
+            // round it so we can use it properly
+            value = Math.round(value);
+            // establish how many circles we should draw based on the value entered, if the number is larger than 500 than only do 500
+            VALID_INPUT.numOfCircles = value > MAX_CIRCLES ? MAX_CIRCLES : value;
+            // if the answer we recieved is larger than 9 or less than 1
+            // select a random number to get a color from our keydata
+            VALID_INPUT.keyValue = value > HIGHEST_KEY_VALUE || value < LOWEST_KEY_VALUE ? RANDOM_COLOR_SELECTION : value
+        } else {
+            // if its not a number keep it as teh key value and only iterate one circle creation
+            VALID_INPUT.numOfCircles = 1;
+            VALID_INPUT.keyValue = value;
+        }
+
+        return VALID_INPUT;
+    }
 };
 
 export default Circles;

@@ -3,6 +3,7 @@ class Calculator {
         this.screen = document.getElementById('screen-content');
         this.historyList = document.getElementById('history-list');
         this.currentExpression = '';
+        this.answer = '0';
         this.events();
     }
 
@@ -90,6 +91,12 @@ class Calculator {
         this.setHistory(formatted);
         // set teh expression to the formatted value so if it is long it dosen't break the screen
         this.setExpression(formatted);
+        // save answer so it can be seen outside of object
+        this.setAnswer(formatted);
+    }
+
+    setAnswer(value) {
+        this.answer = value;
     }
 
     clear() {
