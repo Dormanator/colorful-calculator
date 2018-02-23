@@ -59,8 +59,8 @@ class Circles {
     }
 
     drawCircle(point, color) {
-        // create a new circle a
-        const newCircle = new Path.Circle(point, 300);
+        // create a new circle, set radius based on use of mobile device or not
+        const newCircle = new Path.Circle(point, this.setResponsively(300, 500));
         newCircle.fillColor = color;
         // add it to the class circles array so we can animate each one
         this.circles.push(newCircle);
@@ -108,7 +108,7 @@ class Circles {
         let numOfCircles = 0;
 
         // establishmax max circles we can draw based on user's device
-        const MAX_CIRCLES_TO_DRAW = this.setValidMaxCircles();
+        const MAX_CIRCLES_TO_DRAW = this.setResponsively(100, 250);
 
 
         if (/\d/.test(value)) {
@@ -124,12 +124,12 @@ class Circles {
         return numOfCircles;
     }
 
-    setValidMaxCircles() {
-        // establishmax max circles we can draw based on whther using mobile device or not
+    setResponsively(a, b) {
+        // allow settings to alter based on mobile device use or not
         if (document.documentElement.clientWidth <= 740) {
-            return 100;
+            return a;
         } else {
-            return 250;
+            return b;
         }
     }
 };
