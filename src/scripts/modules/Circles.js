@@ -126,7 +126,7 @@ class Circles {
 
     setResponsively(a, b) {
         // allow settings to alter based on mobile device use or not
-        if (document.documentElement.clientWidth <= 740) {
+        if (document.documentElement.clientWidth < 800) {
             return a;
         } else {
             return b;
