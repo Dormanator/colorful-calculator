@@ -85,7 +85,7 @@ class Circles {
         // establish vairbles we will asign based on input
         let numOfCircles = 0;
         // establishmax circles to draw
-        const MAX_CIRCLES = 200;
+        const MAX_CIRCLES = 150;
 
 
 
