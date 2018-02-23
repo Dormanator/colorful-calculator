@@ -1,6 +1,5 @@
 import Calculator from './modules/Calculator';
 import Circles from './modules/Circles';
-import KeyData from './modules/Keydata';
 import paper from 'paper';
 
 const calculator = new Calculator();
@@ -14,18 +13,18 @@ window.onload = () => {
     view.onKeyDown = (event) => {
         // check for valid keypress input
         if (calculator.validateInput(event.key)) {
-            // stop defaul character press beahvior to prevent weirdness
+            // stop default character press beahvior to prevent weirdness
             event.preventDefault();
-            passInputValues(event.key, KeyData);
+            passInputValues(event.key);
         }
     };
 
     document.getElementById('calc-btns').addEventListener('click', (event) => {
         // check for valid click input
         if (event.target.value) {
-            // stop defaul character press beahvior to prevent weirdness
+            // stop default character press beahvior to prevent weirdness
             event.preventDefault();
-            passInputValues(event.target.value, KeyData);
+            passInputValues(event.target.value);
         }
     });
 
@@ -33,9 +32,13 @@ window.onload = () => {
         // pass value to calc
         calculator.handleInput(value);
         // draw random circles based on key value and corresponding keydata color
-        //  if the user submitted the equation animate the answer
-        const circlesToDraw = (value === '=' || value === 'enter') ? calculator.answer : value;
-        circles.create(circlesToDraw, keyData);
+        //  if the user submitted the equation, pass the answer as the value ot be animated and indiacte it's an answer '1' 
+        if (value === '=' || value === 'enter') {
+            circles.create(calculator.answer, 1);
+            // otherwise submit the number value of teh user input and indicate it's not an answer '0'
+        } else {
+            circles.create(value, 0);
+        }
     };
 
 }

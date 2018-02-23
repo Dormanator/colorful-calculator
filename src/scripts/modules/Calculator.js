@@ -8,7 +8,6 @@ class Calculator {
     }
 
     events() {
-
         this.historyList.addEventListener('click', (event) => {
             if (event.target.dataset.answer) {
                 this.setHistoricValue(event.target.dataset.answer);
@@ -17,7 +16,7 @@ class Calculator {
     }
 
     validateInput(input) {
-        const validInput = /^\d|[/*-+.=()]|enter|backsp|esc/;
+        const validInput = /^\d|[-/*+.=()]|enter|backsp|esc/;
 
         return validInput.test(input);
     }

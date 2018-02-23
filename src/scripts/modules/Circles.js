@@ -3,11 +3,13 @@
 class Circles {
     constructor() {
         this.circles = [];
+        this.setColors = [];
         this.onLoad();
     }
 
     onLoad() {
         paper.setup('canvas');
+        this.createColors();
     }
 
     randomPoint() {
@@ -25,6 +27,7 @@ class Circles {
     }
 
     randomColor() {
+        // generate a randomized hex color code string
         const key = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'],
             LENGTH_OF_HEX_CODE = 6;
         let color = '#';
@@ -35,6 +38,24 @@ class Circles {
         }
 
         return color;
+    }
+
+    createColors() {
+        // a function to create a set of 10 hex colors to choose from to allow color consistency in animations if desired
+        const MAX_COLORS_TO_CREATE = 10;
+        for (let i = 0; i < MAX_COLORS_TO_CREATE; i++) {
+            this.setColors.push(this.randomColor());
+        }
+    }
+
+    pickColor(value, option) {
+        // return a random color if the value we are animating is type 1 - in this case it indicates a calculator answer
+        if (option) {
+            return this.randomColor();
+        } else {
+            // otherwise use of of the colors we generated on load to have consistency for user input values
+            return this.setColors[value];
+        }
     }
 
     drawCircle(point, color) {
@@ -61,21 +82,21 @@ class Circles {
         }
     }
 
-    drawMultipleCircles(times) {
+    drawMultipleCircles(times, option) {
+        // allow for multiple circle creation and allow option for color selection
         for (let i = 0; i < times; i++) {
             // establish a random point to draw circle on keypress
             const point = this.randomPoint();
             // draw circle at generated point with color based on key value in KeyData object
-            this.drawCircle(point, this.randomColor());
+            this.drawCircle(point, this.pickColor(times, option));
         }
     }
 
-    create(value, keydata) {
-
+    create(value, option) {
         const validNumber = this.validateInput(value);
 
-        // call to draw many circles based on the color and number passed in
-        this.drawMultipleCircles(validNumber);
+        // call to draw many circles based on number and color option passed in
+        this.drawMultipleCircles(validNumber, option);
 
         // call function to animate circles once drawn
         this.animateCircles();
@@ -87,16 +108,14 @@ class Circles {
         // establishmax circles to draw
         const MAX_CIRCLES = 150;
 
-
-
         if (/\d/.test(value)) {
             // round it so we can use it properly
-            value = Math.round(value);
+            value = Math.abs(Math.round(value));
             // establish how many circles we should draw based on the value entered, if the number is larger than 500 than only do 500
             numOfCircles = value > MAX_CIRCLES ? MAX_CIRCLES : value;
         } else {
-            // if its not a number keep it as teh key value and only iterate one circle creation
-            numOfCircles = 1;
+            // if its not a number we don't want to make circles
+            numOfCircles = 0;
         }
 
         return numOfCircles;

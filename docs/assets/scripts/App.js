@@ -78,11 +78,7 @@ var _Circles = __webpack_require__(2);
 
 var _Circles2 = _interopRequireDefault(_Circles);
 
-var _Keydata = __webpack_require__(3);
-
-var _Keydata2 = _interopRequireDefault(_Keydata);
-
-var _paper = __webpack_require__(4);
+var _paper = __webpack_require__(3);
 
 var _paper2 = _interopRequireDefault(_paper);
 
@@ -99,18 +95,18 @@ window.onload = function () {
     view.onKeyDown = function (event) {
         // check for valid keypress input
         if (calculator.validateInput(event.key)) {
-            // stop defaul character press beahvior to prevent weirdness
+            // stop default character press beahvior to prevent weirdness
             event.preventDefault();
-            passInputValues(event.key, _Keydata2.default);
+            passInputValues(event.key);
         }
     };
 
     document.getElementById('calc-btns').addEventListener('click', function (event) {
         // check for valid click input
         if (event.target.value) {
-            // stop defaul character press beahvior to prevent weirdness
+            // stop default character press beahvior to prevent weirdness
             event.preventDefault();
-            passInputValues(event.target.value, _Keydata2.default);
+            passInputValues(event.target.value);
         }
     });
 
@@ -118,9 +114,13 @@ window.onload = function () {
         // pass value to calc
         calculator.handleInput(value);
         // draw random circles based on key value and corresponding keydata color
-        //  if the user submitted the equation animate the answer
-        var circlesToDraw = value === '=' || value === 'enter' ? calculator.answer : value;
-        circles.create(circlesToDraw, keyData);
+        //  if the user submitted the equation, pass the answer as the value ot be animated and indiacte it's an answer '1' 
+        if (value === '=' || value === 'enter') {
+            circles.create(calculator.answer, 1);
+            // otherwise submit the number value of teh user input and indicate it's not an answer '0'
+        } else {
+            circles.create(value, 0);
+        }
     };
 };
 
@@ -164,7 +164,7 @@ var Calculator = function () {
     }, {
         key: 'validateInput',
         value: function validateInput(input) {
-            var validInput = /^\d|[/*-+.=()]|enter|backsp|esc/;
+            var validInput = /^\d|[-/*+.=()]|enter|backsp|esc/;
 
             return validInput.test(input);
         }
@@ -338,6 +338,7 @@ var Circles = function () {
         _classCallCheck(this, Circles);
 
         this.circles = [];
+        this.setColors = [];
         this.onLoad();
     }
 
@@ -345,6 +346,7 @@ var Circles = function () {
         key: 'onLoad',
         value: function onLoad() {
             paper.setup('canvas');
+            this.createColors();
         }
     }, {
         key: 'randomPoint',
@@ -366,6 +368,7 @@ var Circles = function () {
     }, {
         key: 'randomColor',
         value: function randomColor() {
+            // generate a randomized hex color code string
             var key = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'],
                 LENGTH_OF_HEX_CODE = 6;
             var color = '#';
@@ -376,6 +379,26 @@ var Circles = function () {
             }
 
             return color;
+        }
+    }, {
+        key: 'createColors',
+        value: function createColors() {
+            // a function to create a set of 10 hex colors to choose from to allow color consistency in animations if desired
+            var MAX_COLORS_TO_CREATE = 10;
+            for (var i = 0; i < MAX_COLORS_TO_CREATE; i++) {
+                this.setColors.push(this.randomColor());
+            }
+        }
+    }, {
+        key: 'pickColor',
+        value: function pickColor(value, option) {
+            // return a random color if the value we are animating is type 1 - in this case it indicates a calculator answer
+            if (option) {
+                return this.randomColor();
+            } else {
+                // otherwise use of of the colors we generated on load to have consistency for user input values
+                return this.setColors[value];
+            }
         }
     }, {
         key: 'drawCircle',
@@ -407,22 +430,22 @@ var Circles = function () {
         }
     }, {
         key: 'drawMultipleCircles',
-        value: function drawMultipleCircles(times) {
+        value: function drawMultipleCircles(times, option) {
+            // allow for multiple circle creation and allow option for color selection
             for (var i = 0; i < times; i++) {
                 // establish a random point to draw circle on keypress
                 var point = this.randomPoint();
                 // draw circle at generated point with color based on key value in KeyData object
-                this.drawCircle(point, this.randomColor());
+                this.drawCircle(point, this.pickColor(times, option));
             }
         }
     }, {
         key: 'create',
-        value: function create(value, keydata) {
-
+        value: function create(value, option) {
             var validNumber = this.validateInput(value);
 
-            // call to draw many circles based on the color and number passed in
-            this.drawMultipleCircles(validNumber);
+            // call to draw many circles based on number and color option passed in
+            this.drawMultipleCircles(validNumber, option);
 
             // call function to animate circles once drawn
             this.animateCircles();
@@ -433,16 +456,16 @@ var Circles = function () {
             // establish vairbles we will asign based on input
             var numOfCircles = 0;
             // establishmax circles to draw
-            var MAX_CIRCLES = 200;
+            var MAX_CIRCLES = 150;
 
             if (/\d/.test(value)) {
                 // round it so we can use it properly
-                value = Math.round(value);
+                value = Math.abs(Math.round(value));
                 // establish how many circles we should draw based on the value entered, if the number is larger than 500 than only do 500
                 numOfCircles = value > MAX_CIRCLES ? MAX_CIRCLES : value;
             } else {
-                // if its not a number keep it as teh key value and only iterate one circle creation
-                numOfCircles = 1;
+                // if its not a number we don't want to make circles
+                numOfCircles = 0;
             }
 
             return numOfCircles;
@@ -458,93 +481,6 @@ exports.default = Circles;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-//@ts-check
-var KeyData = {
-
-    '0': {
-        color: '#1abc9c'
-    },
-    '1': {
-        color: '#2ecc71'
-    },
-    '2': {
-        color: '#3498db'
-    },
-    '3': {
-        color: '#9b59b6'
-    },
-    '4': {
-        color: '#34495e'
-    },
-    '5': {
-        color: '#16a085'
-    },
-    '6': {
-        color: '#27ae60'
-    },
-    '7': {
-        color: '#2980b9'
-    },
-    '8': {
-        color: '#8e44ad'
-    },
-    '9': {
-        color: '#2c3e50'
-    },
-    '-': {
-        color: '#f1c40f'
-    },
-    '+': {
-        color: '#e67e22'
-    },
-    '*': {
-        color: '#e74c3c'
-    },
-    '/': {
-        color: '#95a5a6'
-    },
-    '=': {
-        color: '#f39c12'
-    },
-    '.': {
-        color: '#d35400'
-    },
-    '(': {
-        color: '#1abc9c'
-    },
-    ')': {
-        color: '#2ecc71'
-    },
-    'c': {
-        color: '#3498db'
-    },
-    'ce': {
-        color: '#9b59b6'
-    },
-    'escape': {
-        color: '#34495e'
-    },
-    'backspace': {
-        color: '#16a085'
-    },
-    'enter': {
-        color: '#27ae60'
-    }
-
-};
-
-exports.default = KeyData;
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -581,7 +517,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 var paper = function(self, undefined) {
 
-self = self || __webpack_require__(5);
+self = self || __webpack_require__(4);
 var window = self.window,
 	document = self.document;
 
@@ -15323,7 +15259,7 @@ Base.exports.PaperScript = function() {
 	var global = this,
 		acorn = global.acorn;
 	if (!acorn && "function" !== 'undefined') {
-		try { acorn = __webpack_require__(6); } catch(e) {}
+		try { acorn = __webpack_require__(5); } catch(e) {}
 	}
 	if (!acorn) {
 		var exports, module;
@@ -17033,7 +16969,7 @@ paper = new (PaperScope.inject(Base.exports, {
 }))();
 
 if (paper.agent.node) {
-	__webpack_require__(7)(paper);
+	__webpack_require__(6)(paper);
 }
 
 if (true) {
@@ -17051,13 +16987,13 @@ return paper;
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20926,7 +20862,7 @@ function addLooseExports(parse, Parser$$1, plugins$$1) {
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
