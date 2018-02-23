@@ -117,8 +117,8 @@ window.onload = function () {
         //  if the user submitted the equation, pass the answer as the value ot be animated and indiacte it's an answer '1' 
         if (value === '=' || value === 'enter') {
             circles.create(calculator.answer, 1);
-            // otherwise submit the number value of teh user input and indicate it's not an answer '0'
         } else {
+            // otherwise submit the number value of teh user input and indicate it's not an answer '0'
             circles.create(value, 0);
         }
     };
@@ -305,9 +305,16 @@ var Calculator = function () {
     }, {
         key: 'setHistoricValue',
         value: function setHistoricValue(value) {
-            // convert the past value to a string and set it as the base of our expression to be evaluated
-            this.setExpression(value.toString());
-            this.updateScreen();
+            // if the users current expression ends in a space it means a valid symbol prefaces it
+            // thus the historic value can be added into the existing equation
+            if (/ $/.test(this.currentExpression)) {
+                this.setExpression(this.currentExpression + value.toString());
+                this.updateScreen();
+            } else {
+                // otherwise we should reset teh current value because it cannot be added to a valid existing expression
+                this.setExpression(value.toString());
+                this.updateScreen();
+            }
         }
     }]);
 

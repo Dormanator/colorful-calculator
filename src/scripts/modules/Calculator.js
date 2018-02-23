@@ -141,9 +141,16 @@ class Calculator {
     }
 
     setHistoricValue(value) {
-        // convert the past value to a string and set it as the base of our expression to be evaluated
-        this.setExpression(value.toString());
-        this.updateScreen();
+        // if the users current expression ends in a space it means a valid symbol prefaces it
+        // thus the historic value can be added into the existing equation
+        if (/ $/.test(this.currentExpression)) {
+            this.setExpression(this.currentExpression + value.toString());
+            this.updateScreen();
+        } else {
+            // otherwise we should reset teh current value because it cannot be added to a valid existing expression
+            this.setExpression(value.toString());
+            this.updateScreen();
+        }
     }
 }
 

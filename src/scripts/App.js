@@ -35,8 +35,8 @@ window.onload = () => {
         //  if the user submitted the equation, pass the answer as the value ot be animated and indiacte it's an answer '1' 
         if (value === '=' || value === 'enter') {
             circles.create(calculator.answer, 1);
-            // otherwise submit the number value of teh user input and indicate it's not an answer '0'
         } else {
+            // otherwise submit the number value of teh user input and indicate it's not an answer '0'
             circles.create(value, 0);
         }
     };
