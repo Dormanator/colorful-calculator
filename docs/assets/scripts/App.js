@@ -103,9 +103,10 @@ window.onload = function () {
 
     document.getElementById('calc-btns').addEventListener('click', function (event) {
         // check for valid click input
+        event.stopPropagation();
+        event.preventDefault();
         if (event.target.value) {
-            // stop default character press beahvior to prevent weirdness
-            event.preventDefault();
+
             passInputValues(event.target.value);
         }
     });
