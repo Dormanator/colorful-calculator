@@ -84,8 +84,10 @@ class Circles {
     validateInput(value) {
         // establish vairbles we will asign based on input
         let numOfCircles = 0;
-        // establish legend for numbers used
-        const MAX_CIRCLES = 500;
+        // establishmax circles to draw
+        const MAX_CIRCLES = 200;
+
+
 
         if (/\d/.test(value)) {
             // round it so we can use it properly

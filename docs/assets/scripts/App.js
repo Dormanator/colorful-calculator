@@ -432,8 +432,8 @@ var Circles = function () {
         value: function validateInput(value) {
             // establish vairbles we will asign based on input
             var numOfCircles = 0;
-            // establish legend for numbers used
-            var MAX_CIRCLES = 500;
+            // establishmax circles to draw
+            var MAX_CIRCLES = 200;
 
             if (/\d/.test(value)) {
                 // round it so we can use it properly
