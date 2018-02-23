@@ -442,33 +442,44 @@ var Circles = function () {
     }, {
         key: 'create',
         value: function create(value, option) {
-            var validNumber = this.validateInput(value);
+            var validCircleNum = this.setCirclestoDraw(value);
 
             // call to draw many circles based on number and color option passed in
-            this.drawMultipleCircles(validNumber, option);
+            this.drawMultipleCircles(validCircleNum, option);
 
             // call function to animate circles once drawn
             this.animateCircles();
         }
     }, {
-        key: 'validateInput',
-        value: function validateInput(value) {
+        key: 'setCirclestoDraw',
+        value: function setCirclestoDraw(value) {
             // establish vairbles we will asign based on input
             var numOfCircles = 0;
-            // establishmax circles to draw
-            var MAX_CIRCLES = 150;
+
+            // establishmax max circles we can draw based on user's device
+            var MAX_CIRCLES_TO_DRAW = this.setValidMaxCircles();
 
             if (/\d/.test(value)) {
-                // round it so we can use it properly
+                // round it and make sure its non-negative so we can use it properly
                 value = Math.abs(Math.round(value));
                 // establish how many circles we should draw based on the value entered, if the number is larger than 500 than only do 500
-                numOfCircles = value > MAX_CIRCLES ? MAX_CIRCLES : value;
+                numOfCircles = value > MAX_CIRCLES_TO_DRAW ? MAX_CIRCLES_TO_DRAW : value;
             } else {
                 // if its not a number we don't want to make circles
                 numOfCircles = 0;
             }
 
             return numOfCircles;
+        }
+    }, {
+        key: 'setValidMaxCircles',
+        value: function setValidMaxCircles() {
+            // establishmax max circles we can draw based on whther using mobile device or not
+            if (document.documentElement.clientWidth <= 740) {
+                return 100;
+            } else {
+                return 250;
+            }
         }
     }]);
 
