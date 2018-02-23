@@ -57,14 +57,16 @@ class Calculator {
 
         // evalute the string if its valid equation to find the answer to the equation
         try {
+            console.log(this.currentExpression);
             const answer = eval(this.currentExpression);
 
             // pass the value to show answer so we can display the final equation on the front-end
             this.handleAnswer(answer);
 
         } catch (err) {
-            // clear the currently built equation since it is invalid and teh user needs to start again
+            // clear the currently built equation and answer since it is invalid and teh user needs to start again
             this.setExpression();
+            this.answer = '0';
             // Update the calculator with an error message
             this.updateScreen('Invalid. Try Again.');
         }
