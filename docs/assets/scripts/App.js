@@ -364,6 +364,20 @@ var Circles = function () {
             return point;
         }
     }, {
+        key: 'randomColor',
+        value: function randomColor() {
+            var key = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'],
+                LENGTH_OF_HEX_CODE = 6;
+            var color = '#';
+
+            for (var i = 0; i < 6; i++) {
+                var random = Math.floor(Math.random() * 15);
+                color += key[random];
+            }
+
+            return color;
+        }
+    }, {
         key: 'drawCircle',
         value: function drawCircle(point, color) {
             // create a new circle a
@@ -393,37 +407,22 @@ var Circles = function () {
         }
     }, {
         key: 'drawMultipleCircles',
-        value: function drawMultipleCircles(color, times) {
+        value: function drawMultipleCircles(times) {
             for (var i = 0; i < times; i++) {
                 // establish a random point to draw circle on keypress
                 var point = this.randomPoint();
                 // draw circle at generated point with color based on key value in KeyData object
-                this.drawCircle(point, color);
+                this.drawCircle(point, this.randomColor());
             }
         }
     }, {
         key: 'create',
         value: function create(value, keydata) {
 
-            var VALID_INPUT = this.validateInput(value);
-
-            // // if the value passed in is a number
-            // if (/\d/.test(value)) {
-            //     // round it so we can use it properly
-            //     value = Math.round(value);
-            //     // establish how many circles we should draw based on the value entered, if the number is larger than 500 than only do 500
-            //     numOfCircles = value > MAX_CIRCLES ? MAX_CIRCLES : value;
-            //     // if the answer we recieved is larger than 9 or less than 1
-            //     // select a random number to get a color from our keydata
-            //     keyValue = value > HIGHEST_KEY_VALUE || value < 1 ? RANDOM_COLOR_SELECTION : value
-            // } else {
-            //     // if its not a number keep it as teh key value and only iterate one circle creation
-            //     keyValue = value;
-            //     numOfCircles = 1;
-            // }
+            var validNumber = this.validateInput(value);
 
             // call to draw many circles based on the color and number passed in
-            this.drawMultipleCircles(keydata[VALID_INPUT.keyValue].color, VALID_INPUT.numOfCircles);
+            this.drawMultipleCircles(validNumber);
 
             // call function to animate circles once drawn
             this.animateCircles();
@@ -432,30 +431,21 @@ var Circles = function () {
         key: 'validateInput',
         value: function validateInput(value) {
             // establish vairbles we will asign based on input
-            var numOfCircles = 0,
-                keyValue = 0;
+            var numOfCircles = 0;
             // establish legend for numbers used
-            var MAX_CIRCLES = 500,
-                HIGHEST_KEY_VALUE = 9,
-                LOWEST_KEY_VALUE = 1,
-                RANDOM_COLOR_SELECTION = Math.floor(Math.random() * 9),
-                VALID_INPUT = {};
+            var MAX_CIRCLES = 500;
 
             if (/\d/.test(value)) {
                 // round it so we can use it properly
                 value = Math.round(value);
                 // establish how many circles we should draw based on the value entered, if the number is larger than 500 than only do 500
-                VALID_INPUT.numOfCircles = value > MAX_CIRCLES ? MAX_CIRCLES : value;
-                // if the answer we recieved is larger than 9 or less than 1
-                // select a random number to get a color from our keydata
-                VALID_INPUT.keyValue = value > HIGHEST_KEY_VALUE || value < LOWEST_KEY_VALUE ? RANDOM_COLOR_SELECTION : value;
+                numOfCircles = value > MAX_CIRCLES ? MAX_CIRCLES : value;
             } else {
                 // if its not a number keep it as teh key value and only iterate one circle creation
-                VALID_INPUT.numOfCircles = 1;
-                VALID_INPUT.keyValue = value;
+                numOfCircles = 1;
             }
 
-            return VALID_INPUT;
+            return numOfCircles;
         }
     }]);
 
